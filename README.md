@@ -14,21 +14,48 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# 💬 Translations
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This project is using [`intl-messageformat`](https://formatjs.io/docs/intl-messageformat) to format and translate texts.
 
-## Learn More
+Example:
 
-To learn more about Next.js, take a look at the following resources:
+```tsx
+import { useTranslation } from "hooks/translation"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+const { formatMessage, messages } = useTranslation()
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+const title = formatMessage(
+    messages.title,
+)
+```
 
-## Deploy on Vercel
+---
+Formatting messages that have numbers with plural labels:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```tsx
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+const articles = formatMessage(messages.articles, {
+    number: 1,
+})
+
+// The translation file:
+export const messages = {
+  articles: "{number}  {number, plural, =1 {Article} other {Articles}}",
+}
+```
+---
+Embedded XML tag in the message:
+```tsx
+const terms = formatMessage(messages.terms, {
+    bold: (value: string) => <strong>{value}</strong>,
+});
+
+// The translation file:
+export const messages = {
+  terms: "I read the <bold>terms</bold> and conditions",
+}
+```
+
+All messages are stored by locale in `src/translations/messages/[locale].ts`.
+
